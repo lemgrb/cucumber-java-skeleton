@@ -9,37 +9,55 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.cucumber.skeleton.apidemo_pages.HomePage;
 import org.openqa.selenium.WebElement;
 
 import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * TODO: cross-browser testing?
+ */
 public class StepDefinitions {
 
     private AppiumDriver driver;
 
     @Before
     public void openApp() throws Exception {
-        UiAutomator2Options options = new UiAutomator2Options()
-                .setApp("C:/Users/kinab/Downloads/ApiDemos-debug.apk")
-                .setFullReset(true)
-                .eventTimings();
-        driver = new AndroidDriver(new URL("http://localhost:4723"),options);
+        String platform = System.getProperty("platform","android");
+        switch (platform) {
+            case "ios":
+                // Setup for ios
+                break;
+            case "android":
+            default:
+                UiAutomator2Options options = new UiAutomator2Options()
+                        .setApp("C:/Users/kinab/Downloads/ApiDemos-debug.apk")
+                        .setFullReset(true)
+                        .eventTimings();
+                driver = new AndroidDriver(new URL("http://localhost:4723"),options);
+        }
+
     }
 
     @Given("I tap on Accessibility")
     public void I_tap_on_accessibility() {
-        WebElement element = driver.findElement(AppiumBy.accessibilityId("Accessibility"));
-        element.click();
+        // Arrange -> Act
+        HomePage homePage = new HomePage(driver);
+        homePage.clickAccessibility();
+    }
 
+    @Then("Four accessibility elements are displayed")
+    public void Then_four_elements_are_displayed() {
         // Assert
         List<WebElement> elementList = driver.findElements(AppiumBy.id("android:id/text1"));
         List<String> elementsListString = elementList.stream().map(e -> e.getText()).collect(Collectors.toList());
 
-        assertTrue(elementsListString.size()==4, "Size is not equal to four (4)");
+        assertEquals(elementsListString.size(),4, "Size is not equal to four (4)");
     }
     @Given("I have {int} cukes in my belly")
     public void I_have_cukes_in_my_belly(int cukes) {

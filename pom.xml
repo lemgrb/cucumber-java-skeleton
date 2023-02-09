@@ -11,6 +11,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
+        <jvm.options>--add-opens java.base/java.lang=ALL-UNNAMED</jvm.options>
     </properties>
 
     <dependencyManagement>
@@ -83,6 +84,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M8</version>
                 <configuration>
+                    <argLine>${jvm.options}</argLine>
                     <properties>
                         <!-- Work around. Surefire does not include enough
                              information to disambiguate between different
